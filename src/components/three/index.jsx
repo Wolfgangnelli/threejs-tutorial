@@ -4,6 +4,7 @@ import { Environment, OrbitControls, PerspectiveCamera } from '@react-three/drei
 import { angleToRadians } from '../../utils/angle'
 import { useFrame } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
+import * as THREE from 'three'
 
 const Three = () => {
 
@@ -32,11 +33,11 @@ const Three = () => {
             {/* Ball */}
             <mesh position={[0, 0.5, 0]} castShadow>
                 <sphereGeometry args={[0.5, 32, 32]} />
-                <meshStandardMaterial color="#ffffff" />
+                <meshStandardMaterial color="#ffffff" metalness={0.6} roughness={0.2} />
             </mesh>
             {/* Floor */}
             <mesh rotation={[-(angleToRadians(90)), 0, 0]} receiveShadow>
-                <planeGeometry args={[7, 7]} />
+                <planeGeometry args={[20, 20]} />
                 <meshStandardMaterial color="#1ea3d8" />
             </mesh>
             {/* Ambient light */}
@@ -52,9 +53,13 @@ const Three = () => {
             <spotLight args={[ '#ffffff', 1.5, 7, angleToRadians(45), 0.4]} position={[-3, 1, 0]} castShadow />
 
             {/* Environment */}
-            {/* <Environment>
-
-            </Environment> */}
+            <Environment background>
+                <mesh scale={100}>
+                    <sphereGeometry args={[1, 64, 64]} />
+                    <meshBasicMaterial side={THREE.BackSide} color="#2266cc" />{/* 2280cc */}
+                </mesh>
+            </Environment>
+            {/* Environment is what surrounds the object */}
         </>
     );
 }
