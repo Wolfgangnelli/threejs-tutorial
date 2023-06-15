@@ -1,6 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable react/no-unknown-property */
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Environment, OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { angleToRadians } from '../../utils/angle'
 import { useFrame } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
@@ -9,6 +9,7 @@ const Three = () => {
 
     const orbitControlsRef = useRef(null)
 
+    /* gives you access to whatever frames you are seeing correctly. Is something that runs whenever you have a frame available */
     useFrame((state) => { // this callback runs for 60 times a second
        if(!!orbitControlsRef.current) {
            const { x, y } = state.mouse;
@@ -16,8 +17,7 @@ const Three = () => {
            orbitControlsRef.current.setPolarAngle((y + 1) * angleToRadians(90 - 30));
            orbitControlsRef.current.update();
        }
-
-    })  /* gives you access to whatever frames you are seeing correctly. Is something that runs whenever you have a frame available */
+    })
 
     useEffect(() => {
         if(!!orbitControlsRef.current) {
@@ -30,17 +30,31 @@ const Three = () => {
             <PerspectiveCamera makeDefault position={[0, 1, 5]} />
             <OrbitControls ref={orbitControlsRef} minPolarAngle={angleToRadians(60)} maxPolarAngle={angleToRadians(80)} /> {/* allow the camera to orbit around a target (move the mouse over the target), i stay in a circular orbit around the target */}
             {/* Ball */}
-            <mesh position={[0, 0.5, 0]}>
+            <mesh position={[0, 0.5, 0]} castShadow>
                 <sphereGeometry args={[0.5, 32, 32]} />
                 <meshStandardMaterial color="#ffffff" />
             </mesh>
             {/* Floor */}
-            <mesh rotation={[-(angleToRadians(90)), 0, 0]}>
+            <mesh rotation={[-(angleToRadians(90)), 0, 0]} receiveShadow>
                 <planeGeometry args={[7, 7]} />
                 <meshStandardMaterial color="#1ea3d8" />
             </mesh>
             {/* Ambient light */}
-            <ambientLight args={['#ffffff', 1]} />
+            <ambientLight args={['#ffffff', 0.25]} />
+
+            {/* Directional light */}
+            {/* <directionalLight args={[ '#ffffff', 1]} position={[-4, 1, 0]} /> */}
+
+            {/* PointLight */}
+           {/*  <pointLight args={[ '#ffffff', 1]} position={[-3, 1, 0]} /> */}
+
+            {/* SpotLight */}
+            <spotLight args={[ '#ffffff', 1.5, 7, angleToRadians(45), 0.4]} position={[-3, 1, 0]} castShadow />
+
+            {/* Environment */}
+            {/* <Environment>
+
+            </Environment> */}
         </>
     );
 }
